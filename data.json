@@ -11,5 +11,13 @@
       "weight": 150.2
     }
   ],
-  "foodLog": []
+  "foodLog": [
+    {
+      "date": "2026-02-18",
+      "time": "15:52",
+      "meal": "Snack",
+      "description": "Bento box: hummus + naan, trail mix (pretzels, chocolate, almonds), cheese, pomegranate, pistachios, grapes",
+      "calories": 575
+    }
+  ]
 }
