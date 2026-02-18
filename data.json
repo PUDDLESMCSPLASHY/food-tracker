@@ -1,0 +1,15 @@
+{
+  "profile": {
+    "dailyBudget": 1466,
+    "goalWeight": 142,
+    "startWeight": 150.2,
+    "startDate": "2026-02-18"
+  },
+  "weightLog": [
+    {
+      "date": "2026-02-18",
+      "weight": 150.2
+    }
+  ],
+  "foodLog": []
+}

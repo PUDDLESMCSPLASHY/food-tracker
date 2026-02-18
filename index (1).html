@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kelsey's Food Tracker</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+      color: #333;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: white;
+      text-align: center;
+      margin-bottom: 8px;
+      font-size: 1.8rem;
+    }
+
+    .subtitle {
+      color: rgba(255,255,255,0.8);
+      text-align: center;
+      margin-bottom: 24px;
+      font-size: 0.95rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+
+    .card-title {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #888;
+      margin-bottom: 12px;
+    }
+
+    /* Today's Summary */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      text-align: center;
+    }
+
+    .summary-item .number {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .summary-item .label {
+      font-size: 0.8rem;
+      color: #888;
+    }
+
+    .consumed .number { color: #667eea; }
+    .remaining .number { color: #10b981; }
+    .remaining.over .number { color: #ef4444; }
+    .budget .number { color: #888; }
+
+    /* Progress Bar */
+    .progress-container {
+      margin-top: 16px;
+    }
+
+    .progress-bar {
+      height: 12px;
+      background: #e5e7eb;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      border-radius: 6px;
+      transition: width 0.3s ease;
+    }
+
+    .progress-fill.over {
+      background: linear-gradient(90deg, #ef4444, #dc2626);
+    }
+
+    /* Food Log */
+    .food-log {
+      list-style: none;
+    }
+
+    .food-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 12px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .food-item:last-child {
+      border-bottom: none;
+    }
+
+    .food-info {
+      flex: 1;
+    }
+
+    .food-name {
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+
+    .food-meta {
+      font-size: 0.8rem;
+      color: #888;
+    }
+
+    .food-calories {
+      font-weight: 600;
+      color: #667eea;
+      font-size: 1.1rem;
+    }
+
+    .empty-state {
+      text-align: center;
+      color: #888;
+      padding: 24px;
+      font-style: italic;
+    }
+
+    /* Weight Section */
+    .weight-display {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .weight-current {
+      text-align: center;
+    }
+
+    .weight-current .number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #667eea;
+    }
+
+    .weight-current .label {
+      font-size: 0.8rem;
+      color: #888;
+    }
+
+    .weight-goal {
+      text-align: center;
+    }
+
+    .weight-goal .number {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #10b981;
+    }
+
+    .weight-goal .label {
+      font-size: 0.8rem;
+      color: #888;
+    }
+
+    .weight-to-go {
+      text-align: center;
+      padding: 12px;
+      background: #f8f9fa;
+      border-radius: 8px;
+    }
+
+    .weight-to-go .number {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #764ba2;
+    }
+
+    .weight-to-go .label {
+      font-size: 0.75rem;
+      color: #888;
+    }
+
+    /* Weight Progress Bar */
+    .weight-progress {
+      margin-top: 16px;
+    }
+
+    .weight-bar {
+      height: 8px;
+      background: #e5e7eb;
+      border-radius: 4px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .weight-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #10b981, #059669);
+      border-radius: 4px;
+    }
+
+    .weight-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 4px;
+      font-size: 0.75rem;
+      color: #888;
+    }
+
+    /* Trends */
+    .trend-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      margin-bottom: 16px;
+    }
+
+    .trend-day {
+      text-align: center;
+    }
+
+    .trend-day .day-label {
+      font-size: 0.7rem;
+      color: #888;
+      margin-bottom: 4px;
+    }
+
+    .trend-day .day-value {
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 8px 4px;
+      background: #f0f0f0;
+      border-radius: 6px;
+    }
+
+    .trend-day .day-value.has-data {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .trend-day .day-value.over {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: white;
+    }
+
+    .meal-breakdown {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .meal-stat {
+      padding: 12px;
+      background: #f8f9fa;
+      border-radius: 8px;
+    }
+
+    .meal-stat .meal-name {
+      font-size: 0.8rem;
+      color: #888;
+      margin-bottom: 4px;
+    }
+
+    .meal-stat .meal-avg {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #333;
+    }
+
+    /* Weight History */
+    .weight-history {
+      list-style: none;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+
+    .weight-entry {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 0.9rem;
+    }
+
+    .weight-entry:last-child {
+      border-bottom: none;
+    }
+
+    .weight-date {
+      color: #888;
+    }
+
+    .weight-value {
+      font-weight: 600;
+    }
+
+    .weight-change {
+      font-size: 0.8rem;
+      margin-left: 8px;
+    }
+
+    .weight-change.down {
+      color: #10b981;
+    }
+
+    .weight-change.up {
+      color: #ef4444;
+    }
+
+    /* Last Updated */
+    .last-updated {
+      text-align: center;
+      color: rgba(255,255,255,0.7);
+      font-size: 0.8rem;
+      margin-top: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🦉 Kelsey's Tracker</h1>
+    <p class="subtitle" id="todayDate"></p>
+
+    <!-- Today's Summary -->
+    <div class="card">
+      <div class="card-title">Today</div>
+      <div class="summary-grid">
+        <div class="summary-item consumed">
+          <div class="number" id="consumed">0</div>
+          <div class="label">consumed</div>
+        </div>
+        <div class="summary-item remaining" id="remainingContainer">
+          <div class="number" id="remaining">1466</div>
+          <div class="label">remaining</div>
+        </div>
+        <div class="summary-item budget">
+          <div class="number" id="budget">1466</div>
+          <div class="label">budget</div>
+        </div>
+      </div>
+      <div class="progress-container">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Today's Food Log -->
+    <div class="card">
+      <div class="card-title">What You've Eaten</div>
+      <ul class="food-log" id="foodLog">
+        <li class="empty-state">Nothing logged yet today. Send Oz a food pic! 📸</li>
+      </ul>
+    </div>
+
+    <!-- Weight Progress -->
+    <div class="card">
+      <div class="card-title">Weight Progress</div>
+      <div class="weight-display">
+        <div class="weight-current">
+          <div class="number" id="currentWeight">150.2</div>
+          <div class="label">current</div>
+        </div>
+        <div class="weight-to-go">
+          <div class="number" id="toGo">8.2</div>
+          <div class="label">lbs to goal</div>
+        </div>
+        <div class="weight-goal">
+          <div class="number" id="goalWeight">142</div>
+          <div class="label">goal</div>
+        </div>
+      </div>
+      <div class="weight-progress">
+        <div class="weight-bar">
+          <div class="weight-bar-fill" id="weightBarFill" style="width: 0%"></div>
+        </div>
+        <div class="weight-labels">
+          <span id="startWeightLabel">150.2</span>
+          <span id="goalWeightLabel">142</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Weight History -->
+    <div class="card">
+      <div class="card-title">Weight History</div>
+      <ul class="weight-history" id="weightHistory">
+        <li class="empty-state">Weigh-ins will show here</li>
+      </ul>
+    </div>
+
+    <!-- Weekly Trends -->
+    <div class="card">
+      <div class="card-title">This Week</div>
+      <div class="trend-grid" id="weekTrend">
+        <!-- Filled by JS -->
+      </div>
+      <div class="card-title" style="margin-top: 16px;">Avg by Meal</div>
+      <div class="meal-breakdown" id="mealBreakdown">
+        <div class="meal-stat">
+          <div class="meal-name">Breakfast</div>
+          <div class="meal-avg" id="avgBreakfast">--</div>
+        </div>
+        <div class="meal-stat">
+          <div class="meal-name">Lunch</div>
+          <div class="meal-avg" id="avgLunch">--</div>
+        </div>
+        <div class="meal-stat">
+          <div class="meal-name">Dinner</div>
+          <div class="meal-avg" id="avgDinner">--</div>
+        </div>
+        <div class="meal-stat">
+          <div class="meal-name">Snacks</div>
+          <div class="meal-avg" id="avgSnack">--</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="last-updated">Last updated: <span id="lastUpdated">--</span></p>
+  </div>
+
+  <script>
+    // Load data and render
+    async function loadData() {
+      try {
+        const response = await fetch('data.json?' + Date.now());
+        const data = await response.json();
+        render(data);
+      } catch (e) {
+        console.error('Failed to load data:', e);
+      }
+    }
+
+    function render(data) {
+      const today = new Date().toISOString().split('T')[0];
+      const budget = data.profile.dailyBudget;
+
+      // Today's date display
+      const dateOptions = { weekday: 'long', month: 'long', day: 'numeric' };
+      document.getElementById('todayDate').textContent = 
+        new Date().toLocaleDateString('en-US', dateOptions);
+
+      // Filter today's food
+      const todayFood = data.foodLog.filter(f => f.date === today);
+      const consumed = todayFood.reduce((sum, f) => sum + f.calories, 0);
+      const remaining = budget - consumed;
+
+      // Update summary
+      document.getElementById('consumed').textContent = consumed;
+      document.getElementById('remaining').textContent = Math.abs(remaining);
+      document.getElementById('budget').textContent = budget;
+
+      const remainingContainer = document.getElementById('remainingContainer');
+      const remainingLabel = remainingContainer.querySelector('.label');
+      if (remaining < 0) {
+        remainingContainer.classList.add('over');
+        remainingLabel.textContent = 'over';
+      } else {
+        remainingContainer.classList.remove('over');
+        remainingLabel.textContent = 'remaining';
+      }
+
+      // Progress bar
+      const progress = Math.min((consumed / budget) * 100, 100);
+      const progressFill = document.getElementById('progressFill');
+      progressFill.style.width = progress + '%';
+      if (consumed > budget) {
+        progressFill.classList.add('over');
+      } else {
+        progressFill.classList.remove('over');
+      }
+
+      // Food log
+      const foodLogEl = document.getElementById('foodLog');
+      if (todayFood.length === 0) {
+        foodLogEl.innerHTML = '<li class="empty-state">Nothing logged yet today. Send Oz a food pic! 📸</li>';
+      } else {
+        foodLogEl.innerHTML = todayFood.map(f => `
+          <li class="food-item">
+            <div class="food-info">
+              <div class="food-name">${f.description}</div>
+              <div class="food-meta">${f.meal} · ${f.time}</div>
+            </div>
+            <div class="food-calories">${f.calories}</div>
+          </li>
+        `).join('');
+      }
+
+      // Weight section
+      const weights = data.weightLog.sort((a, b) => new Date(b.date) - new Date(a.date));
+      const currentWeight = weights.length > 0 ? weights[0].weight : data.profile.startWeight;
+      const goalWeight = data.profile.goalWeight;
+      const startWeight = data.profile.startWeight;
+      const toGo = (currentWeight - goalWeight).toFixed(1);
+
+      document.getElementById('currentWeight').textContent = currentWeight;
+      document.getElementById('goalWeight').textContent = goalWeight;
+      document.getElementById('toGo').textContent = toGo;
+      document.getElementById('startWeightLabel').textContent = startWeight;
+      document.getElementById('goalWeightLabel').textContent = goalWeight;
+
+      // Weight progress (how far from start to goal)
+      const totalToLose = startWeight - goalWeight;
+      const lostSoFar = startWeight - currentWeight;
+      const weightProgress = totalToLose > 0 ? Math.max(0, Math.min(100, (lostSoFar / totalToLose) * 100)) : 0;
+      document.getElementById('weightBarFill').style.width = weightProgress + '%';
+
+      // Weight history
+      const weightHistoryEl = document.getElementById('weightHistory');
+      if (weights.length === 0) {
+        weightHistoryEl.innerHTML = '<li class="empty-state">No weigh-ins yet</li>';
+      } else {
+        weightHistoryEl.innerHTML = weights.slice(0, 10).map((w, i) => {
+          const dateStr = new Date(w.date + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+          let changeHtml = '';
+          if (i < weights.length - 1) {
+            const diff = (w.weight - weights[i + 1].weight).toFixed(1);
+            if (diff < 0) {
+              changeHtml = `<span class="weight-change down">${diff}</span>`;
+            } else if (diff > 0) {
+              changeHtml = `<span class="weight-change up">+${diff}</span>`;
+            }
+          }
+          return `
+            <li class="weight-entry">
+              <span class="weight-date">${dateStr}</span>
+              <span><span class="weight-value">${w.weight}</span>${changeHtml}</span>
+            </li>
+          `;
+        }).join('');
+      }
+
+      // Weekly trends
+      const weekTrendEl = document.getElementById('weekTrend');
+      const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      const todayDow = new Date().getDay();
+      
+      // Get dates for this week (Sunday to Saturday)
+      const weekDates = [];
+      const todayDate = new Date();
+      const sunday = new Date(todayDate);
+      sunday.setDate(todayDate.getDate() - todayDow);
+      
+      for (let i = 0; i < 7; i++) {
+        const d = new Date(sunday);
+        d.setDate(sunday.getDate() + i);
+        weekDates.push(d.toISOString().split('T')[0]);
+      }
+
+      weekTrendEl.innerHTML = days.map((day, i) => {
+        const dateStr = weekDates[i];
+        const dayFood = data.foodLog.filter(f => f.date === dateStr);
+        const dayTotal = dayFood.reduce((sum, f) => sum + f.calories, 0);
+        
+        let valueClass = '';
+        let displayVal = '--';
+        
+        if (dayFood.length > 0) {
+          displayVal = dayTotal;
+          valueClass = dayTotal > budget ? 'has-data over' : 'has-data';
+        }
+        
+        return `
+          <div class="trend-day">
+            <div class="day-label">${day}</div>
+            <div class="day-value ${valueClass}">${displayVal}</div>
+          </div>
+        `;
+      }).join('');
+
+      // Meal averages
+      const mealTotals = { breakfast: [], lunch: [], dinner: [], snack: [] };
+      data.foodLog.forEach(f => {
+        const meal = f.meal.toLowerCase();
+        if (mealTotals[meal]) {
+          mealTotals[meal].push(f.calories);
+        }
+      });
+
+      const avg = arr => arr.length > 0 ? Math.round(arr.reduce((a, b) => a + b, 0) / arr.length) : '--';
+      document.getElementById('avgBreakfast').textContent = avg(mealTotals.breakfast);
+      document.getElementById('avgLunch').textContent = avg(mealTotals.lunch);
+      document.getElementById('avgDinner').textContent = avg(mealTotals.dinner);
+      document.getElementById('avgSnack').textContent = avg(mealTotals.snack);
+
+      // Last updated
+      document.getElementById('lastUpdated').textContent = 
+        new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+    }
+
+    // Load on page load
+    loadData();
+
+    // Auto-refresh every 30 seconds
+    setInterval(loadData, 30000);
+  </script>
+</body>
+</html>
