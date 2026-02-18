@@ -11,5 +11,13 @@
       "weight": 150.2
     }
   ],
-  "foodLog": []
+  "foodLog": [
+    {
+      "date": "2026-02-18",
+      "time": "12:00",
+      "meal": "Lunch",
+      "description": "Snack plate (apple, grapes, naan, hummus, cheese, cucumbers) + yogurt bowl with berries & almonds",
+      "calories": 670
+    }
+  ]
 }
