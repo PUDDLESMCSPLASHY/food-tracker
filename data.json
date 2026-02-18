@@ -14,10 +14,17 @@
   "foodLog": [
     {
       "date": "2026-02-18",
-      "time": "15:52",
+      "time": "10:00",
       "meal": "Snack",
-      "description": "Bento box: hummus + naan, trail mix (pretzels, chocolate, almonds), cheese, pomegranate, pistachios, grapes",
-      "calories": 575
+      "description": "White Monster Energy (Ultra Zero)",
+      "calories": 10
+    },
+    {
+      "date": "2026-02-18",
+      "time": "10:00",
+      "meal": "Snack",
+      "description": "Reese's Fast Break mini",
+      "calories": 90
     }
   ]
 }
