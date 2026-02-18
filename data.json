@@ -11,13 +11,5 @@
       "weight": 150.2
     }
   ],
-  "foodLog": [
-    {
-      "date": "2026-02-18",
-      "time": "12:30",
-      "meal": "Lunch",
-      "description": "Southwestern grilled tofu bowl",
-      "calories": 435
-    }
-  ]
+  "foodLog": []
 }
