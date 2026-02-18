@@ -25,6 +25,13 @@
       "meal": "Snack",
       "description": "Reese's Fast Break mini",
       "calories": 90
+    },
+    {
+      "date": "2026-02-18",
+      "time": "16:03",
+      "meal": "Snack",
+      "description": "Reese's Fast Break mini",
+      "calories": 90
     }
   ]
 }
