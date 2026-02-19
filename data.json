@@ -39,6 +39,20 @@
       "meal": "Dinner",
       "description": "Vodka water",
       "calories": 100
+    },
+    {
+      "date": "2026-02-18",
+      "time": "18:08",
+      "meal": "Dinner",
+      "description": "Cheese curds with ranch & marinara",
+      "calories": 710
+    },
+    {
+      "date": "2026-02-18",
+      "time": "18:08",
+      "meal": "Dinner",
+      "description": "Vodka with lime",
+      "calories": 100
     }
   ]
 }
