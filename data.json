@@ -53,6 +53,13 @@
       "meal": "Dinner",
       "description": "Vodka with lime",
       "calories": 100
+    },
+    {
+      "date": "2026-02-18",
+      "time": "19:38",
+      "meal": "Dinner",
+      "description": "Veggie plate: naan, celery, carrots, cauliflower, hummus, queso",
+      "calories": 460
     }
   ]
 }
