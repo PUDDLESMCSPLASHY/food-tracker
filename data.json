@@ -60,6 +60,13 @@
       "meal": "Dinner",
       "description": "Veggie plate: naan, celery, carrots, cauliflower, hummus, queso",
       "calories": 460
+    },
+    {
+      "date": "2026-02-19",
+      "time": "14:35",
+      "meal": "Breakfast",
+      "description": "Chocolate croissant",
+      "calories": 320
     }
   ]
 }
