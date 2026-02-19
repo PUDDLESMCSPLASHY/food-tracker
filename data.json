@@ -67,6 +67,13 @@
       "meal": "Breakfast",
       "description": "Chocolate croissant",
       "calories": 320
+    },
+    {
+      "date": "2026-02-19",
+      "time": "16:16",
+      "meal": "Dinner",
+      "description": "Crispy parmesan potatoes (half)",
+      "calories": 225
     }
   ]
 }
