@@ -74,6 +74,13 @@
       "meal": "Dinner",
       "description": "Crispy parmesan potatoes (half)",
       "calories": 225
+    },
+    {
+      "date": "2026-02-19",
+      "time": "20:07",
+      "meal": "Dinner",
+      "description": "3 small black bean tacos",
+      "calories": 480
     }
   ]
 }
